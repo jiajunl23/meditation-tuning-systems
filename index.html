@@ -5,13 +5,22 @@
 <script>
   /* global Tone, nn, viz */
   
+  
   const wave = viz.createWaveform()
   const root = 264
   
-  const synth = new Tone.PolySynth({})
-  synth.set({
-    oscillator: {
-      type: "sine"
+  let previous_start_time = 0
+  
+  const synth = new Tone.PolySynth(
+    Tone.Synth,
+    {oscillator: {
+      type: 'sine'
+    },
+    envelope: {
+      attack: 0.001,
+      decay: 0.1,
+      sustain: 0.1,
+      release: 1.2
     }
   })
   synth.connect(wave)
@@ -22,16 +31,40 @@
   }
   
   function play_sequence(){
-    const start_time = Tone.now()
-    for (let i = 0; i <= 24; i++){
-      synth.triggerAttackRelease(calc_note(i), 0.5, start_time + i * 0.5)
+    if (previous_start_time === 0){
+      const start_time = Tone.now()
+      previous_start_time = start_time
+      for (let i = 0; i <= 24; i++){
+        synth.triggerAttackRelease(calc_note(i), 0.5, start_time + i * 0.5)
+      }
     }
+    else{
+      const start_time = (Math.round(Tone.now() - previous_start_time) / 0.5) * 0.5 + previous_start_time + 0.25
+      
+      previous_start_time = start_time
+      for (let i = 0; i <= 24; i++){
+        synth.triggerAttackRelease(calc_note(i), 0.5, start_time + i * 0.5)
+      }
+    }
+    
   }
   
   function play_random() {
-    const start_time = Tone.now()
-    for (let i = 0; i < 20; i++){
-      synth.triggerAttackRelease(calc_note(nn.random(0, 24)), 0.5, start_time + i * 0.5)
+    if (previous_start_time === 0){
+      const start_time = Tone.now()
+      previous_start_time = start_time
+      for (let i = 0; i < 20; i++){
+        synth.triggerAttackRelease(calc_note(nn.random(0, 24)), 0.5, start_time + i * 0.5)
+      }
+    }
+    else{
+      const start_time = (Math.round(Tone.now() - previous_start_time) / 0.5) * 0.5 + previous_start_time + 0.25
+      
+      previous_start_time = start_time
+      
+      for (let i = 0; i < 20; i++){
+        synth.triggerAttackRelease(calc_note(nn.random(0, 24)), 0.5, start_time + i * 0.5)
+      }
     }
   }
   
@@ -43,15 +76,17 @@
                   .content("start playing in sequence")
                   .addTo("body")
                   .on("click", play_sequence)
-
+  nn.create("br").addTo("body")
+  
   const button2 = nn.create("button")
                   .css({
                     backgroundColor: "orange"
                   })
-                  .content("start play a random squence")
+                  .content("start playing a random sequence")
                   .addTo("body")
                   .on("click", play_random)
   
-
+  nn.create("br").addTo("body")
+  nn.create("label").content("try to press the 'start playing a random sequence' button one more time while the sequence is still playing for a more complicated sound").addTo("body")
 
 </script>
