@@ -1,0 +1,57 @@
+<body style="background: white"></body>
+<script src="https://unpkg.com/tone"></script>
+<script src="https://cdn.jsdelivr.net/gh/netizenorg/netnet-standard-library/build/nn.min.js"></script>
+<script src="https://algorithmicmusic.online/js/viz-helpers.js"></script>
+<script>
+  /* global Tone, nn, viz */
+  
+  const wave = viz.createWaveform()
+  const root = 264
+  
+  const synth = new Tone.PolySynth({})
+  synth.set({
+    oscillator: {
+      type: "sine"
+    }
+  })
+  synth.connect(wave)
+  synth.toDestination()
+  
+  function calc_note(step){
+    return root * Math.pow(2, step / 24)
+  }
+  
+  function play_sequence(){
+    const start_time = Tone.now()
+    for (let i = 0; i <= 24; i++){
+      synth.triggerAttackRelease(calc_note(i), 0.5, start_time + i * 0.5)
+    }
+  }
+  
+  function play_random() {
+    const start_time = Tone.now()
+    for (let i = 0; i < 20; i++){
+      synth.triggerAttackRelease(calc_note(nn.random(0, 24)), 0.5, start_time + i * 0.5)
+    }
+  }
+  
+  
+  const button1 = nn.create("button")
+                  .css({
+                    backgroundColor: "orange"
+                  })
+                  .content("start playing in sequence")
+                  .addTo("body")
+                  .on("click", play_sequence)
+
+  const button2 = nn.create("button")
+                  .css({
+                    backgroundColor: "orange"
+                  })
+                  .content("start play a random squence")
+                  .addTo("body")
+                  .on("click", play_random)
+  
+
+
+</script>
