@@ -53,7 +53,7 @@
     if (previous_start_time === 0){
       const start_time = Tone.now()
       previous_start_time = start_time
-      for (let i = 0; i < 20; i++){
+      for (let i = 0; i < 30; i++){
         synth.triggerAttackRelease(calc_note(nn.random(0, 24)), 0.5, start_time + i * 0.5)
       }
     }
@@ -62,7 +62,7 @@
       
       previous_start_time = start_time
       
-      for (let i = 0; i < 20; i++){
+      for (let i = 0; i < 30; i++){
         synth.triggerAttackRelease(calc_note(nn.random(0, 24)), 0.5, start_time + i * 0.5)
       }
     }
@@ -87,6 +87,9 @@
                   .on("click", play_random)
   
   nn.create("br").addTo("body")
-  nn.create("label").content("try to press the 'start playing a random sequence' button one more time while the sequence is still playing for a more complicated sound").addTo("body")
+  nn.create("label").content("try to press any button one more time while the sequence is still playing for a more complicated sound").addTo("body")
+  nn.create("br").addTo("body")
+  nn.create("br").addTo("body")
+  nn.create("label").content("Short Reflection: For this week's meditation, I started with my tuning system, and I like to divide an octave in more detail than 12, so I chose 24. Then, I made a sequence player to play the sound of a octave in a sequence from low to high to showcase it. Later, I thought it would be pretty interesting to do a random sequence and I had that button, and I tried many of the synth examples on the course website and the synth - treetrunk seems to be a good fit, so I copy and pasted it to here, and then I realized that I actually wanted it to be a PolySynth, because I want it to be able to play more sounds at the sametime so I adjusted it to be a PolySynth. I tried what if I touched the button one more time while the sequence is still playing, and frankly it sounds awful and it is because the start time of the second sequence does not sync well with the first sequence's start time. Therefore, in my code, I added some code to make sure that the start time of the second sequence is always right in the middle of two attacks of the previous sequence. ").addTo("body")
 
 </script>
